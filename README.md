@@ -66,4 +66,8 @@ Sube tus cambios a la rama: git push origin feature/nombre-de-tu-caracteristica
 Crea un "Pull Request".
 
 📜 Licencia
+<<<<<<< HEAD
 Este proyecto está bajo la licencia [MIT].
+=======
+Este proyecto está bajo la licencia [MIT].
+>>>>>>> e4e930394bc4284bcda10d20d22e42b92d3e74f7
