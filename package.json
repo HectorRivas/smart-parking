@@ -1,7 +1,7 @@
 {
   "name": "smart-parking",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -13,8 +13,10 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "expo": "~54.0.10",
+    "expo-barcode-scanner": "^13.0.1",
     "expo-router": "~6.0.8",
     "expo-status-bar": "~3.0.8",
+    "lucide-react-native": "^0.544.0",
     "nativewind": "^4.2.1",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
@@ -22,6 +24,8 @@
     "react-native": "0.81.4",
     "react-native-reanimated": "~4.1.0",
     "react-native-safe-area-context": "~5.6.0",
+    "react-native-svg": "^15.12.1",
+    "react-native-svg-charts": "^5.4.0",
     "tailwindcss": "^3.4.17"
   },
   "private": true,
