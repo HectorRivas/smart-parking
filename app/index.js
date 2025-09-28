@@ -1,6 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Text, Pressable, Image, SafeAreaView, Platform } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { View, Text, Pressable, Image, Platform } from "react-native";
+import {
+  SafeAreaView,
+  SafeAreaProvider,
+  SafeAreaInsetsContext,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import Constants from "expo-constants";
 import { Link } from "expo-router";
 import QR from "../assets/QR.png";
@@ -17,8 +22,7 @@ export default function App() {
       />
       <StatusBar style="light" backgroundColor="#273940" />
 
-      <View className="flex-1 items-center bg-white">
-        <SafeAreaView style={{ flex: 1, width: "100%" }}>
+      <View className="flex-1 bg-white justify-between items-center">
           <View className="h-20 top-0 justify-center items-center bg-[#273940] w-full">
             <Text className="text-white text-2xl font-bold">Bienvenido a </Text>
           </View>
@@ -75,7 +79,6 @@ export default function App() {
               </Link>
             </View>
           </View>
-        </SafeAreaView>
       </View>
     </SafeAreaProvider>
   );

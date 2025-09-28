@@ -33,6 +33,11 @@ Asegúrate de tener instalados los siguientes programas:
     npm install
     # o
     yarn install
+
+    #En caso de error con la instalcion de depencias, ejecuta lo siguiente
+    npm install --force 
+    # 0
+    npm install --legacy-peer-deps
     ```
 
 ### Ejecutar la aplicación
