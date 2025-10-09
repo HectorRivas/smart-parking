@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,14 +8,16 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
-import Constants from "expo-constants";
-import { Link } from "expo-router";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { Link, useRouter } from "expo-router";
 import QR from "../assets/QR.png";
+import ScreenWrapper from "../components/ScreenWrapper";
 
-// --- Componente principal ---
 export default function RegisterScreen() {
   return (
     <SafeAreaProvider>
@@ -24,25 +26,60 @@ export default function RegisterScreen() {
   );
 }
 
-// --- Contenido separado, usando useSafeAreaInsets ---
 function RegisterContent() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+
+  // --- Estado de los campos del formulario ---
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [contraseña, setContraseña] = useState("");
+  const [confirmar, setConfirmar] = useState("");
+
+  // --- Función para manejar el registro ---
+  const handleRegister = async () => {
+    if (!nombre || !correo || !contraseña) {
+      Alert.alert("Error", "Por favor completa todos los campos obligatorios.");
+      return;
+    }
+
+    if (contraseña !== confirmar) {
+      Alert.alert("Error", "Las contraseñas no coinciden.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://192.168.100.81:4000/api/users/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            nombre,
+            correo,
+            telefono,
+            contraseña,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Éxito", "Usuario registrado correctamente.");
+        router.push("/login");
+      } else {
+        Alert.alert("Error", data.message || "No se pudo registrar el usuario.");
+      }
+    } catch (error) {
+      Alert.alert("Error", "No se pudo conectar con el servidor.");
+      console.error(error);
+    }
+  };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "white",
-        paddingTop:
-          Platform.OS === "android" ? Constants.statusBarHeight : insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-      }}
-    >
-      {/* Barra de estado */}
-      <StatusBar style="light" backgroundColor="#273940" translucent />
-
+    <ScreenWrapper backgroundColor="white">
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -69,42 +106,56 @@ function RegisterContent() {
           {/* Formulario */}
           <View className="flex-1 justify-center items-center w-full">
             <View className="justify-center items-start m-4 p-4 w-full">
-              <Input label="Nombre" placeholder="Ingrese su nombre" />
+              <Input
+                label="Nombre"
+                placeholder="Ingrese su nombre"
+                value={nombre}
+                onChangeText={setNombre}
+              />
               <Input
                 label="Correo electrónico"
                 placeholder="Ingrese su correo electrónico"
                 inputMode="email"
+                value={correo}
+                onChangeText={setCorreo}
               />
               <Input
                 label="Teléfono"
                 placeholder="Ingrese su teléfono"
                 keyboardType="phone-pad"
                 inputMode="tel"
+                value={telefono}
+                onChangeText={setTelefono}
               />
               <Input
                 label="Contraseña"
                 placeholder="Crear contraseña"
                 secureTextEntry
+                value={contraseña}
+                onChangeText={setContraseña}
               />
               <Input
                 label="Confirmar Contraseña"
                 placeholder="Confirme su contraseña"
                 secureTextEntry
+                value={confirmar}
+                onChangeText={setConfirmar}
               />
 
               {/* Botón de registro */}
-              <Link asChild href="/crear-cuenta">
-                <Pressable className="bg-[#273940] rounded-full m-1 p-4 w-full items-center">
-                  {({ pressed }) => (
-                    <Text
-                      className="text-white text-lg font-bold"
-                      style={{ color: pressed ? "#d1d1d1" : "white" }}
-                    >
-                      Registrarse
-                    </Text>
-                  )}
-                </Pressable>
-              </Link>
+              <Pressable
+                className="bg-[#273940] rounded-full m-1 p-4 w-full items-center"
+                onPress={handleRegister}
+              >
+                {({ pressed }) => (
+                  <Text
+                    className="text-white text-lg font-bold"
+                    style={{ color: pressed ? "#d1d1d1" : "white" }}
+                  >
+                    Registrarse
+                  </Text>
+                )}
+              </Pressable>
 
               {/* Enlace a login */}
               <View className="justify-center items-center mt-4 w-full">
@@ -128,17 +179,19 @@ function RegisterContent() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </View>
+    </ScreenWrapper>
   );
 }
 
-// --- Componente reutilizable para inputs ---
+// --- Componente Input reutilizable ---
 function Input({
   label,
   placeholder,
   secureTextEntry,
   keyboardType,
   inputMode,
+  value,
+  onChangeText,
 }) {
   return (
     <>
@@ -150,6 +203,8 @@ function Input({
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         inputMode={inputMode}
+        value={value}
+        onChangeText={onChangeText}
         className="border-2 border-gray-300 rounded-full p-4 w-full mb-4"
       />
     </>
