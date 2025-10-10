@@ -53,7 +53,7 @@ export default function LoginScreen() {
           id: data.user.id,
           nombre: data.user.nombre,
           correo: data.user.correo,
-          telefono: data.user.telefono, // 💡 Guardando el teléfono
+          telefono: data.user.telefono,
         })
       );
 

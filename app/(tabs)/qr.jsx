@@ -14,20 +14,11 @@ export default function QRScreen() {
       try {
         const userData = await AsyncStorage.getItem("user");
 
-        // --- 🔎 LOG 1: Verificar si hay datos guardados ---
-        console.log("Datos de usuario RAW:", userData); 
-        
         if (userData) {
           const user = JSON.parse(userData);
 
-          // --- 🔎 LOG 2: Verificar el objeto parseado ---
-          console.log("Objeto de usuario parseado:", user); 
-          console.log("Valor de user.nombre (minúscula):", user.nombre);
-          console.log("Id del usuario:", user.id);
-          
-          // ✅ ¡ATENCIÓN! Usar siempre 'nombre' en MINÚSCULA
           setUserId(user.id);
-          setUserName(user.nombre); 
+          setUserName(user.nombre.split(" ")[0]); // Obtener solo el primer nombre
         } else {
           // Si no hay userData, mostrar alerta
           Alert.alert("Error de Sesión", "No se encontró sesión de usuario.");
@@ -55,13 +46,13 @@ export default function QRScreen() {
   return (
     <ScreenWrapper>
       <View className="flex-1 items-center w-full bg-white">
-        <View className="h-20 top-0 justify-center items-center w-full">
+        <View className="h-20 top-0 justify-center items-center w-full mb-8">
           <Text className="text-[#618D9E] text-2xl font-bold">
             Hola, {userName || "Usuario"}
           </Text>
         </View>
         <View className="items-center">
-          <View className="w-80 h-80 bg-white p-4 rounded-3xl shadow-2xl flex items-center justify-center">
+          <View className="w-80 h-80 bg-white p-4 rounded-3xl shadow-2xl flex items-center justify-center mb-8">
             <QRCode
               value={userId || "sin_id"}
               size={240}
@@ -69,10 +60,12 @@ export default function QRScreen() {
               backgroundColor="transparent"
             />
           </View>
-          <Text className="text-gray-600 mt-4 text-center w-80">
-            Muestra este QR al ingresar o salir del estacionamiento para
-            registrar tu estancia.
-          </Text>
+          <View className="w-80 h-auto p-4 bg-white rounded-xl shadow-2xl flex justify-center items-center mb-8">
+            <Text className="text-[#618D9E] text-center font-bold w-80 ">
+              Muestra este QR al ingresar o salir del estacionamiento para
+              registrar tu estancia.
+            </Text>
+          </View>
         </View>
       </View>
     </ScreenWrapper>
